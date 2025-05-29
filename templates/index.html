@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMS Spam Classifier</title>
+    <link rel="shortcut icon" type="image/png" href="{{url_for('static', filename='images/logo.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='sweetalert/bootstrap/bootstrap.min.css') }}">
+    <script src="{{ url_for('static', filename='sweetalert/dist/sweetalert.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='sweetalert/dist/sweetalert.css') }}">
+</head>
+<body>
+<div class="container center">
+<div class="logo center"><img src="{{url_for('static', filename='images/logo.png')}}" alt="logo"> <h1>SMS Spam Classifier Using ML</h1>
+</div>
+
+<form class="needs-validation" id="spamEmailForm" novalidate>
+<textarea name="email" id="emailInput" placeholder="Type your email here..." class="form-control" required></textarea><br>
+<button type="submit" class="btn btn-danger" style="padding:12px 30px;">Check Spam</button>
+</form>
+
+  <div id="result"></div>
+
+</div>
+
+ <script src="{{ url_for('static', filename='sweetalert/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        document.getElementById('spamEmailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('emailInput').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!email) {
+                return;
+            }
+
+            resultDiv.textContent = 'Checking...';
+
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                resultDiv.textContent = 'Error: ' + data.error;
+                } else {
+                resultDiv.textContent = "";
+                swal({
+                title: data.prediction,
+                type: "success",
+                confirmButtonClass: 'btn-secondary',
+                confirmButtonText: 'Close',
+                });
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                resultDiv.textContent = 'Could not reach server. Is Flask running?';
+            });
+            });
+
+
+    // form validation
+    (function () {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+    </script>
+</body>
+</html>
