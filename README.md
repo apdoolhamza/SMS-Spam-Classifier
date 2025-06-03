@@ -1,5 +1,7 @@
 # SMS Spam Classifier Using Machine Learning
 
+![Project Screenshot](screenshots/127.0.0.1_5000_.png)
+
 # Guide:
 
 * Step 1. Download `Python 3.13.2` or lates version and Install it if doesn't exist on your system.
