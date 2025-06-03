@@ -1,6 +1,6 @@
-# SMS Spam Classifier Using Machine Learning
-
 ![Project Screenshot](screenshots/127.0.0.1_5000_.png)
+
+# SMS Spam Classifier Using Machine Learning
 
 # Guide:
 
